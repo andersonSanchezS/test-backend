@@ -24,3 +24,15 @@ class PlayersSerializer(serializers.ModelSerializer):
     class Meta:
         model = players
         fields = '__all__'
+
+
+class MatchesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = matches
+        fields = '__all__'
+
+
+class PositionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = positions
+        fields = '__all__'

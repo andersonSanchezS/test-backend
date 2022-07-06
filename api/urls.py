@@ -18,4 +18,6 @@ urlpatterns = [
     path('players/add/', views.playersView),
     path('players/delete/<int:pk>/', views.playersView),
     path('players/update/<int:pk>/', views.playersView),
+    path('matches/', views.matchesView),
+    path('matches/add/', views.matchesView),
 ]

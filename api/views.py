@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
-from base.models import cities, divisions, teams, players
-from .serializers import CitySerializer, DivisionSerializer, TeamsSerializer, PlayersSerializer
+from base.models import cities, divisions, teams, players, matches, positions
+from .serializers import CitySerializer, DivisionSerializer, TeamsSerializer, PlayersSerializer, MatchesSerializer, PositionsSerializer
 from django.http import JsonResponse
 
 
@@ -78,6 +78,12 @@ def teamsView(request, pk=None):
         serializer = TeamsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            new_team = PositionsSerializer(
+                data={'pj': 0, 'pg': 0, 'pe': 0, 'pp': 0, 'goals': 0, 'points': 0, 'teamId': serializer.data['id']})
+            if new_team.is_valid():
+                new_team.save()
+            else:
+                return JsonResponse({'error': new_team.errors}, safe=False, status=400)
             return JsonResponse({'data': serializer.data}, safe=False, status=201)
         return JsonResponse({'error': serializer.errors}, safe=False, status=400)
 
@@ -127,3 +133,18 @@ def playersView(request, pk=None):
 
     else:
         return JsonResponse({'error': 'method not allowed'}, safe=False, status=400)
+
+
+@api_view(['GET', 'POST', 'PUT'])
+def matchesView(request, pk=None):
+    if request.method == 'GET':
+        data = matches.objects.all()
+        serializer = MatchesSerializer(data, many=True)
+        return JsonResponse({'data': serializer.data}, safe=False, status=200)
+
+    elif request.method == 'POST':
+        serializer = MatchesSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'data': serializer.data}, safe=False, status=201)
+        return JsonResponse({'error': serializer.errors}, safe=False, status=400)
