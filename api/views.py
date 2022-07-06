@@ -143,8 +143,47 @@ def matchesView(request, pk=None):
         return JsonResponse({'data': serializer.data}, safe=False, status=200)
 
     elif request.method == 'POST':
+        if request.data['team1'] == request.data['team2']:
+            return JsonResponse({'error': 'home and away teams cannot be the same'}, safe=False, status=400)
+
         serializer = MatchesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            if request.data['team1_score'] == request.data['team2_score']:
+                team1 = positions.objects.get(teamId_id=request.data['team1'])
+                team2 = positions.objects.get(teamId_id=request.data['team2'])
+                team1Serializer = PositionsSerializer(team1, data={'teamId': request.data['team1'], 'pj': team1.pj + 1, 'pg': team1.pg, 'pe': team1.pe + 1,
+                                                      'pp': team1.pp, 'goals': team1.goals + request.data['team1_score'], 'points': team1.points + 1})
+                team2Serializer = PositionsSerializer(team2, data={'teamId': request.data['team2'], 'pj': team2.pj + 1, 'pg': team2.pg, 'pe': team2.pe + 1,
+                                                      'pp': team2.pp, 'goals': team2.goals + request.data['team2_score'], 'points': team2.points + 1})
+                if team1Serializer.is_valid() and team2Serializer.is_valid():
+                    team1Serializer.save()
+                    team2Serializer.save()
+                else:
+                    return JsonResponse({'error': team1Serializer.errors}, safe=False, status=400)
+            elif request.data['team1_score'] > request.data['team2_score']:
+                team1 = positions.objects.get(teamId_id=request.data['team1'])
+                team2 = positions.objects.get(teamId_id=request.data['team2'])
+                team1Serializer = PositionsSerializer(team1, data={'teamId': request.data['team1'], 'pj': team1.pj + 1, 'pg': team1.pg + 1, 'pe': team1.pe,
+                                                      'pp': team1.pp, 'goals': team1.goals + request.data['team1_score'], 'points': team1.points + 3})
+                team2Serializer = PositionsSerializer(team2, data={'teamId': request.data['team2'], 'pj': team2.pj + 1, 'pg': team2.pg, 'pe': team2.pe,
+                                                      'pp': team2.pp + 1, 'goals': team2.goals + request.data['team2_score'], 'points': team2.points})
+                if team1Serializer.is_valid() and team2Serializer.is_valid():
+                    team1Serializer.save()
+                    team2Serializer.save()
+                else:
+                    return JsonResponse({'error': team1Serializer.errors}, safe=False, status=400)
+            else:
+                team1 = positions.objects.get(teamId_id=request.data['team1'])
+                team2 = positions.objects.get(teamId_id=request.data['team2'])
+                team1Serializer = PositionsSerializer(team1, data={'teamId': request.data['team1'], 'pj': team1.pj + 1, 'pg': team1.pg, 'pe': team1.pe,
+                                                      'pp': team1.pp + 1, 'goals': team1.goals + request.data['team1_score'], 'points': team1.points})
+                team2Serializer = PositionsSerializer(team2, data={'teamId': request.data['team2'], 'pj': team2.pj + 1, 'pg': team2.pg + 1, 'pe': team2.pe,
+                                                      'pp': team2.pp, 'goals': team2.goals + request.data['team2_score'], 'points': team2.points + 3})
+                if team1Serializer.is_valid() and team2Serializer.is_valid():
+                    team1Serializer.save()
+                    team2Serializer.save()
+                else:
+                    return JsonResponse({'error': team1Serializer.errors}, safe=False, status=400)
             return JsonResponse({'data': serializer.data}, safe=False, status=201)
         return JsonResponse({'error': serializer.errors}, safe=False, status=400)
