@@ -119,6 +119,8 @@ def teamsView(request, pk=None):
         return JsonResponse({'error': serializer.errors}, safe=False, status=400)
 
     elif request.method == 'DELETE':
+        deletePosition = positions.objects.get(teamId_id=pk)
+        deletePosition.delete()
         data = teams.objects.get(pk=pk)
         data.delete()
         return JsonResponse({'msg': 'team deleted'}, safe=False, status=200)
@@ -161,9 +163,18 @@ def playersView(request, pk=None):
 @api_view(['GET', 'POST', 'PUT'])
 def matchesView(request, pk=None):
     if request.method == 'GET':
-        data = matches.objects.all()
-        serializer = MatchesSerializer(data, many=True)
-        return JsonResponse({'data': serializer.data}, safe=False, status=200)
+        result = []
+        for p in matches.objects.raw(
+                r'''select bm.*,bt."name" as team1_name,bt2."name" as team2_name 
+                    from base_matches bm
+                    inner join base_teams bt on bt.id = bm.team1_id
+                    inner join base_teams bt2 on bt2.id = bm.team2_id  '''):
+
+            result.append({'id': p.id, 'team1': p.team1_id, 'team2': p.team2_id,
+                           'team1_name': p.team1_name, 'team2_name': p.team2_name,
+                           'team1_score': p.team1_score, 'team2_score': p.team2_score, })
+        serializer = MatchesSerializer(result, many=True)
+        return JsonResponse({'data': result}, safe=False, status=200)
 
     elif request.method == 'POST':
         if request.data['team1'] == request.data['team2']:
