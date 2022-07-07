@@ -14,7 +14,6 @@ def citiesView(request, pk=None):
             serializer = CitySerializer(data, many=True)
         else:
             data = cities.objects.get(pk=pk)
-            print(data)
             serializer = CitySerializer(data, many=False)
         return JsonResponse({'data': serializer.data}, safe=False, status=200)
 
