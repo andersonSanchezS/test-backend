@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from base.models import cities, divisions, teams, players, matches, positions
 from .serializers import CitySerializer, DivisionSerializer, TeamsSerializer, PlayersSerializer, MatchesSerializer, PositionsSerializer
 from django.http import JsonResponse
+from django.core import serializers
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -153,7 +154,7 @@ def matchesView(request, pk=None):
                 team1 = positions.objects.get(teamId_id=request.data['team1'])
                 team2 = positions.objects.get(teamId_id=request.data['team2'])
                 team1Serializer = PositionsSerializer(team1, data={'teamId': request.data['team1'], 'pj': team1.pj + 1, 'pg': team1.pg, 'pe': team1.pe + 1,
-                                                      'pp': team1.pp, 'goals': team1.goals + request.data['team1_score'], 'points': team1.points + 1})
+                                                                   'pp': team1.pp, 'goals': team1.goals + request.data['team1_score'], 'points': team1.points + 1})
                 team2Serializer = PositionsSerializer(team2, data={'teamId': request.data['team2'], 'pj': team2.pj + 1, 'pg': team2.pg, 'pe': team2.pe + 1,
                                                       'pp': team2.pp, 'goals': team2.goals + request.data['team2_score'], 'points': team2.points + 1})
                 if team1Serializer.is_valid() and team2Serializer.is_valid():
@@ -187,3 +188,14 @@ def matchesView(request, pk=None):
                     return JsonResponse({'error': team1Serializer.errors}, safe=False, status=400)
             return JsonResponse({'data': serializer.data}, safe=False, status=201)
         return JsonResponse({'error': serializer.errors}, safe=False, status=400)
+
+
+@api_view(['GET'])
+def positionsView(request):
+    if request.method == 'GET':
+        result = []
+        for p in positions.objects.raw(
+                r'select bp.*, bt.name as name from base_positions bp inner join base_teams bt on bt.id=bp."teamId_id" order by bp.points desc'):
+            result.append({'name': p.name, 'pj': p.pj, 'pg': p.pg,
+                          'pe': p.pe, 'pp': p.pp, 'goals': p.goals, 'points': p.points})
+        return JsonResponse({'data': result}, safe=False, status=200)

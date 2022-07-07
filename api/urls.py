@@ -20,4 +20,5 @@ urlpatterns = [
     path('players/update/<int:pk>/', views.playersView),
     path('matches/', views.matchesView),
     path('matches/add/', views.matchesView),
+    path('positions/', views.positionsView),
 ]
