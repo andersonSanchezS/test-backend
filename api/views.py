@@ -9,8 +9,13 @@ from django.core import serializers
 def citiesView(request, pk=None):
 
     if request.method == 'GET':
-        data = cities.objects.all()
-        serializer = CitySerializer(data, many=True)
+        if pk == None:
+            data = cities.objects.all()
+            serializer = CitySerializer(data, many=True)
+        else:
+            data = cities.objects.get(pk=pk)
+            print(data)
+            serializer = CitySerializer(data, many=False)
         return JsonResponse({'data': serializer.data}, safe=False, status=200)
 
     elif request.method == 'POST':
@@ -40,8 +45,12 @@ def citiesView(request, pk=None):
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def divisionsView(request, pk=None):
     if request.method == 'GET':
-        data = divisions.objects.all()
-        serializer = DivisionSerializer(data, many=True)
+        if pk == None:
+            data = divisions.objects.all()
+            serializer = DivisionSerializer(data, many=True)
+        else:
+            data = divisions.objects.get(pk=pk)
+            serializer = DivisionSerializer(data, many=False)
         return JsonResponse({'data': serializer.data}, safe=False, status=200)
 
     elif request.method == 'POST':
@@ -71,9 +80,22 @@ def divisionsView(request, pk=None):
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def teamsView(request, pk=None):
     if request.method == 'GET':
-        data = teams.objects.all()
-        serializer = TeamsSerializer(data, many=True)
-        return JsonResponse({'data': serializer.data}, safe=False, status=200)
+        if pk == None:
+            result = []
+            for p in teams.objects.raw(
+                r'''select bt.* , bc.description as city_name, bd.description as division_name
+                    from base_teams bt
+                    inner join base_cities bc on bc.id = bt.city_id
+                    inner join base_divisions bd on bd.id = bt.division_id '''):
+
+                result.append({'id': p.id, 'name': p.name, 'numberOfPlayers': p.numberOfPlayers, 'city': p.city_id,
+                               'division': p.division_id, 'city_name': p.city_name, 'division_name': p.division_name})
+            serializer = TeamsSerializer(result, many=True)
+            return JsonResponse({'data': result}, safe=False, status=200)
+        else:
+            data = teams.objects.get(pk=pk)
+            serializer = TeamsSerializer(data, many=False)
+            return JsonResponse({'data': serializer.data}, safe=False, status=200)
 
     elif request.method == 'POST':
         serializer = TeamsSerializer(data=request.data)
