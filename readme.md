@@ -13,8 +13,8 @@
 
 ## Básica estructuración de folders.
 
-| Folder   | Explicacion                                                                   |
-| -------- | ----------------------------------------------------------------------------- |
-| Api      | Aquí va todo lo relacionado a la de negocios y endpoints de la API.           |
-| Base     | Aquí va todo lo relacionado a los modelos que se usaron para la base de datos |
-| Material | aquí va la configuración de django                                            |
+| Folder     | Explicacion                                                                   |
+| --------   | ----------------------------------------------------------------------------- |
+| Api        | Aquí va todo lo relacionado a la de negocios y endpoints de la API.           |
+| Base       | Aquí va todo lo relacionado a los modelos que se usaron para la base de datos |
+| LeagueCrud | aquí va la configuración de django                                            |
