@@ -1,0 +1,120 @@
+### API ENDPOINTS
+
+### CITIES
+
+### CITIES -  GET ALL CITIES
+GET http://localhost:8000/api/cities HTTP/1.1
+Content-Type: application/json
+
+### CITIES - GET CITY BY ID
+GET http://localhost:8000/api/cities/2 HTTP/1.1
+Content-Type: application/json
+
+### CITIES - POST CITY
+POST http://localhost:8000/api/cities/add/ HTTP/1.1
+Content-Type: application/json
+
+{
+"description":"test"
+}
+
+### CITIES - DELETE CITY
+DELETE http://localhost:8000/api/cities/delete/12/ HTTP/1.1
+Content-Type: application/json
+
+### CITIES - UPDATE CITY
+PUT http://localhost:8000/api/cities/update/14/ HTTP/1.1
+Content-Type: application/json
+
+{
+   "description":"test de cambio de descripcion" 
+}
+
+
+### DIVISIONS
+
+### DIVISIONS - GET ALL DIVISIONS
+GET http://localhost:8000/api/divisions/ HTTP/1.1
+
+### DIVISIONS - GET DIVISION BY ID
+GET http://localhost:8000/api/divisions/7 HTTP/1.1
+
+### DIVISIONS - POST DIVISION
+POST http://localhost:8000/api/divisions/add/ HTTP/1.1
+Content-Type: application/json
+
+{
+"description":"serie c"
+}
+
+### DIVISIONS - DELETE DIVISION
+DELETE http://localhost:8000/api/divisions/delete/8/ HTTP/1.1
+
+### DIVISIONS - UPDATE DIVISION
+PUT http://localhost:8000/api/divisions/update/6/ HTTP/1.1
+Content-Type: application/json
+
+{
+   "description":"serie b metropolitana" 
+}
+
+
+### TEAMS
+
+### TEAMS - GET ALL TEAMS
+GET http://localhost:8000/api/teams/ HTTP/1.1
+
+### TEAMS - GET TEAM BY ID
+GET http://localhost:8000/api/teams/11 HTTP/1.1
+
+### TEAMS - POST TEAM
+POST http://localhost:8000/api/teams/add/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "name":"PSG",
+    "numberOfPlayers":11,
+    "city":2,
+    "division":7
+}
+
+### TEAMS - DELETE TEAM
+DELETE http://localhost:8000/api/teams/delete/13/ HTTP/1.1
+
+### TEAMS - UPDATE TEAM
+PUT http://localhost:8000/api/teams/update/11/ HTTP/1.1
+Content-Type: application/json
+
+{
+   "name":"Manchester united",
+   "numberOfPlayers":23,
+   "city":2,
+   "division":6
+}
+
+
+### PLAYERS
+
+### PLAYERS - GET ALL PLAYERS
+GET http://localhost:8000/api/players/ HTTP/1.1
+
+### PLAYERS - GET PLAYER BY ID
+GET http://localhost:8000/api/players/3 HTTP/1.1
+
+### PLAYERS - POST PLAYER
+POST http://localhost:8000/api/players/add/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "name":"anderson sanchez",
+    "team":11,
+    "age":22,
+    "salary":350000000,
+    "yellow_cards":2,
+    "red_cards":1,
+    "goals":12,
+    "played_matches":25
+}
+
+### PLAYERS - DELETE PLAYER
+DELETE http://localhost:8000/api/players/delete/4/ HTTP/1.1

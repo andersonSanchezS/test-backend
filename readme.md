@@ -2,7 +2,7 @@
 
 ## Instructivos para correr la aplicación:
 
-- instalar los modulos django djangorestframework y psycopg2 utilizando pip
+- instalar los modulos django djangorestframework y psycopg2, django-cors-headers utilizando pip
 - Correr `python manage.py` en la CLI cuando se encuentre ubicado dentro del folder del proyecto.
 - para la base de datos no es necesario generarla , se creo una instancia de PostgresSQL utilizando
   Amazon RDS para evitar problemas de migraciones entre otras cosas
