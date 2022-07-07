@@ -7,10 +7,6 @@
 - para la base de datos no es necesario generarla , se creo una instancia de PostgresSQL utilizando
   Amazon RDS para evitar problemas de migraciones entre otras cosas
 
-## Breve explicación de lo que hace el aplicativo:
-
-- La aplicación simula un **Admin Panel** o un **Dashboard** en el cuál podrá navegar a través del sidebar.
-
 ## Básica estructuración de folders.
 
 | Folder     | Explicacion                                                                   |
